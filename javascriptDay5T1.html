@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Weather App</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #8fd3a9;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 50px 20px;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 40px;
+      font-weight: bold;
+    }
+
+    .weather-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+      max-width: 700px;
+      flex-wrap: wrap;
+    }
+
+    .weather-info {
+      font-size: 1.5rem;
+      line-height: 2rem;
+    }
+
+    .weather-info h2 {
+      font-size: 4rem;
+      margin: 0;
+    }
+
+    .search-box {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      margin-top: 20px;
+      flex-wrap: wrap;
+    }
+
+    input {
+      padding: 10px;
+      border: none;
+      border-radius: 20px;
+      outline: none;
+      width: 200px;
+    }
+
+    button {
+      padding: 10px 20px;
+      border: none;
+      background-color: white;
+      color: black;
+      border-radius: 20px;
+      cursor: pointer;
+    }
+
+    @media (max-width: 600px) {
+      .weather-container {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .search-box {
+        justify-content: flex-start;
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Weather App</h1>
+  <div class="weather-container">
+    <div class="weather-info" id="weather">
+      <h2>--</h2>
+      <div>City</div>
+      <div>--:-- Day</div>
+      <div>Condition</div>
+    </div>
+
+    <div class="search-box">
+      <input type="text" id="cityInput" placeholder="Enter city name" />
+      <button onclick="getWeather()">Search Button</button>
+    </div>
+  </div>
+
+  <script>
+    async function getWeather() {
+      const city = document.getElementById("cityInput").value || "Bhopal";
+      const apiKey = ""; 
+      const url = https//api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric;
+;
+
+      try {
+        const response = await fetch(url);
+        if (!response.ok) throw new Error("City not found");
+
+        const data = await response.json();
+
+        const temp = Math.round(data.main.temp);
+        const location = data.name;
+        const weatherType = data.weather[0].description;
+        const now = new Date();
+        const time = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        const weekday = now.toLocaleDateString('en-US', { weekday: 'long' });
+
+        document.getElementById("weather").innerHTML = `
+          <h2>${temp}</h2>
+          <div>${location}</div>
+          <div>${time} ${weekday}</div>
+          <div>${weatherType}</div>
+        `;
+      } catch (error) {
+        alert("City not found! Please enter a valid city name.");
+      }
+    }
+
+    // Load default city on page load
+    window.onload = getWeather;
+  </script>
+
+</body>
+</html>
